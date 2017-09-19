@@ -5,7 +5,7 @@ import { withGoogleMap, GoogleMap, Marker, InfoWindow, Circle } from 'react-goog
 import MarkerClusterer from 'react-google-maps/lib/addons/MarkerClusterer';
 
 function getStores(value) {
-  return fetch(`http://localhost:3000/us/stores/search/stores?lng=${value.lng}&lat=${value.lat}2&radius=25`, {method:'GET'})
+  return fetch(`http://localhost:3000/us/stores/location?lng=${value.lng}&lat=${value.lat}2&radius=25`, {method:'GET'})
 }
 
 const RADIUS = 1.60934 * 25 * 1000;
@@ -70,32 +70,52 @@ export default class MapStore extends Component {
   }
 
   componentWillMount() {
-    fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=1421+Foxworthy+Avenue,+San+Jose,+CA,+United+States&key=AIzaSyAL6FyEf5Oql_lrQoYFoI3puPltEKyuHMs`, {method:'GET'})
+    fetch('http://localhost:3000/us/stores', {method:'GET'})
       .then(response => response.json())
-      .then(response => {
-        const {lat, lng } = response.results[0].geometry.location;
+      .then(stores => {
+        const markers = stores.map((store, index) => {
+          return {
+            ...store,
+            position: {
+              lng: store.location.coordinates[0],
+              lat: store.location.coordinates[1]
+            },
+            key: index
+          }
+        });
 
-        getStores({lat, lng})
-        .then(response => response.json())
-        .then(stores => {
-          const markers = stores.map((store, index) => {
-            return {
-              ...store,
-              position: {
-                lng: store.location.coordinates[0],
-                lat: store.location.coordinates[1]
-              },
-              key: index
-            }
-          });
-
-          this.setState({ 
-            markers,
-            center: { lng: lng, lat: lat, },
-            zoom: 8
-          })
+        this.setState({ 
+          markers,
+          //center: { lng: store.location.coordinates[0], lat: store.location.coordinates[1], },
+          zoom: 8
         })
-    })
+      })
+    // fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=1421+Foxworthy+Avenue,+San+Jose,+CA,+United+States&key=AIzaSyAL6FyEf5Oql_lrQoYFoI3puPltEKyuHMs`, {method:'GET'})
+    //   .then(response => response.json())
+    //   .then(response => {
+    //     const {lat, lng } = response.results[0].geometry.location;
+
+    //     getStores({lat, lng})
+    //     .then(response => response.json())
+    //     .then(stores => {
+    //       const markers = stores.map((store, index) => {
+    //         return {
+    //           ...store,
+    //           position: {
+    //             lng: store.location.coordinates[0],
+    //             lat: store.location.coordinates[1]
+    //           },
+    //           key: index
+    //         }
+    //       });
+
+    //       this.setState({ 
+    //         markers,
+    //         center: { lng: lng, lat: lat, },
+    //         zoom: 8
+    //       })
+    //     })
+    // })
     .catch(err => console.error(err));
   }
 
