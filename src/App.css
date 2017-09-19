@@ -1,33 +1,4 @@
-#map {
-  min-height: 400px;
-  height: 100vh;
-  max-height: 100%;
-  width: 70%;
-  float: left;
-}
-
-#search {
-  width: 30%;
-  float: left;
-}
-
-#search ul {
-  position: relative;
-  right: -15px;
-  margin: 10px 0 0 -15px;
-  padding: 0 15px 0 15px;
-  max-height: 500px;
+.list-store {
+  height: 397px;
   overflow-y: auto;
-}
-
-input {
-  height: 20px;
-  margin: 15px 0 0 15px;
-  border: 1px solid #eee;
-  border-radius: 2px;
-}
-
-#search li {
-  border-bottom: 1px solid #eee;
-  list-style: none;
 }
